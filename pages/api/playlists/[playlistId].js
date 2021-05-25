@@ -2,7 +2,7 @@ import { getPlaylistItems } from '../../../lib/spotify'
 
 export default async function handler(req, res) {
   const { playlistId } = req.query
-  console.log(playlistId)
+  //console.log(playlistId)
   const response = await getPlaylistItems(playlistId);
   const { items } = await response.json();
 
