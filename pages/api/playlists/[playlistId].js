@@ -6,7 +6,6 @@ export default async function handler(req, res) {
   const response = await getPlaylistItems(playlistId);
   const { items } = await response.json();
 
-//make this dynamic based on user_id
 const playlistItems = items.map(item => ({
   track: item.track,
   added_At: item.added_at

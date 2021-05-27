@@ -24,7 +24,7 @@ function PlaylistSelector(props) {
             className={classes.playlistSelector}
             options={props.playlists}
             getOptionLabel={(option) => option.title}
-            onChange={props.handleChange}
+            onChange={props.handlePlaylistChange}
             label="playlist-selector-label"
             id="playlist-selector"
             disableClearable={true}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IconButton, List, Grid, ListItem, ListItemText, ListItemSecondaryAction, Divider, Card} from '@material-ui/core';
+import { IconButton, List, Grid, ListItem, ListItemText, ListItemSecondaryAction, ListItemAvatar, Avatar} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {PlayCircleFilled, Delete} from '@material-ui/icons';
 import useSWR from 'swr';
@@ -15,7 +15,12 @@ const useStyles = makeStyles((theme) => ({
     title: {
       margin: theme.spacing(4, 0, 2),
     },
+    trackList: {
+        width: '100%'
+    }
   }));
+
+
 
 function TrackList(props) {
     const classes = useStyles();
@@ -29,33 +34,32 @@ function TrackList(props) {
     }
 
     const { playlistItems } = data
-
-    //console.log(playlistItems)
+    useEffect((props) => props.handleTrackListChange(playlistItems))
 
     return (
-        <Grid item xs={20}>
-          <div className={classes.demo}>
-            <List dense={false}>
-              {playlistItems.map((item) => (
-                  <div>
-                    <ListItem >
-                    <IconButton edge="start" aria-label="play">
-                        <PlayCircleFilled edge="start" aria-label="play" />
-                    </IconButton>
-                    <ListItemText
-                        primary={item.track.name}
-                    />
-                    <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete">
-                        <Delete />
+        <Grid container>
+            <Grid item xs>
+                <List dense={false} className={classes.trackList}>
+                    {playlistItems.map((item) => (
+                      <ListItem key={item.track.id} divider={true}>
+                        <IconButton edge="start" aria-label="play">
+                            <PlayCircleFilled edge="start" aria-label="play" style={{ color: '#1DB954' }}/>
                         </IconButton>
-                    </ListItemSecondaryAction>
-                    </ListItem>
-                    <Divider light />
-                  </div>
-              ))}
-            </List>
-          </div>
+                        <ListItemAvatar>
+                            <Avatar alt={item.track.name} variant="square" src={item.track.album.images[2].url}/>
+                        </ListItemAvatar>
+                        <ListItemText
+                            primary={item.track.name}
+                        />
+                        <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="delete">
+                                <Delete />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    ))}
+                </List>
+            </Grid>
         </Grid>
     )
 }

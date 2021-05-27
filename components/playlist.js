@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import useSWR from 'swr';
@@ -27,7 +27,6 @@ function Playlist() {
   })
 
   const handlePlaylistChange = (event, value) => {
-    console.log(value)
     if (value) {
       setSelectedPlaylist({
         title: value.title,
@@ -41,12 +40,27 @@ function Playlist() {
     return null;
   }
   const { playlists } = data
-  
+
+  const [selectedTrackList, setSelectedTrackList] = useState([])
+
+  const handleTrackListChange = (newTrackList) => {
+    if (newTrackList) {
+      const newTrackListFiltered = []
+      newTrackList.map((item) => newTrackListFiltered.push({
+        id: item.track.id,
+        name: item.track.name,
+        audio_data: {
+          popularity: item.track.popularity
+        }
+      }));
+      setSelectedTrackList(newTrackListFiltered)
+    }
+  }
 
   return (
     <Paper className={classes.playlistPaper} elevation={3} style={{maxHeight: '100%', overflow: 'auto'}}>
-      <PlaylistSelector playlists={playlists} handleChange={handlePlaylistChange}/>
-      {!!selectedPlaylist.id && <TrackList playlistId={selectedPlaylist.id}/>}
+      <PlaylistSelector playlists={playlists} handlePlaylistChange={handlePlaylistChange}/>
+      {!!selectedPlaylist.id && <TrackList playlistId={selectedPlaylist.id} handleTrackListChange={handleTrackListChange}/>}
     </Paper>
   )
 }
