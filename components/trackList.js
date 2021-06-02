@@ -25,41 +25,37 @@ const useStyles = makeStyles((theme) => ({
 function TrackList(props) {
     const classes = useStyles();
 
-    const {data, error} = useSWR(`api/playlists/${props.playlistId}`, fetcher);
-    
-    if (error) {
-        return <a className={classes.tracksLoading}>Error loading your tracks</a>
-    } else if (!data) {
+    if (!props.selectedTrackList) {
         return <a className={classes.tracksLoading}>Loading...</a>
+    } else if (Array.isArray(props.selectedTrackList) && !props.selectedTrackList.length) {
+        return <a className={classes.tracksLoading}>This playlist is empty! Please add items</a>
     }
-
-    const { playlistItems } = data
-    useEffect((props) => props.handleTrackListChange(playlistItems))
 
     return (
         <Grid container>
-            <Grid item xs>
-                <List dense={false} className={classes.trackList}>
-                    {playlistItems.map((item) => (
-                      <ListItem key={item.track.id} divider={true}>
-                        <IconButton edge="start" aria-label="play">
-                            <PlayCircleFilled edge="start" aria-label="play" style={{ color: '#1DB954' }}/>
-                        </IconButton>
-                        <ListItemAvatar>
-                            <Avatar alt={item.track.name} variant="square" src={item.track.album.images[2].url}/>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={item.track.name}
-                        />
-                        <ListItemSecondaryAction>
-                            <IconButton edge="end" aria-label="delete">
-                                <Delete />
+            {props.selectedTrackList &&
+                <Grid item xs>
+                    <List dense={false} className={classes.trackList}>
+                        {props.selectedTrackList.map((item) => (
+                          <ListItem key={item.track.id} divider={true}>
+                            <IconButton edge="start" aria-label="play">
+                              <PlayCircleFilled edge="start" aria-label="play" style={{ color: '#1DB954' }}/>
                             </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    ))}
-                </List>
-            </Grid>
+                            <ListItemAvatar>
+                              <Avatar alt={item.track.name} variant="square" src={item.track.album.images[2].url}/>
+                            </ListItemAvatar>
+                            <ListItemText
+                              primary={item.track.name}
+                            />
+                            <ListItemSecondaryAction>
+                              <IconButton edge="end" aria-label="delete">
+                                <Delete />
+                              </IconButton>
+                            </ListItemSecondaryAction>
+                         </ListItem>
+                        ))}
+                    </List>
+                </Grid>}
         </Grid>
     )
 }

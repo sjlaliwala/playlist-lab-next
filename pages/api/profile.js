@@ -13,5 +13,5 @@ export default async function handler(_, res) {
     'public, s-maxage=86400, stale-while-revalidate=43200'
   );
 
-  return res.status(200).json({ profile });
+  return res.status(200).json(profile);
 }

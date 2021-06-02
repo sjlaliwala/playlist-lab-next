@@ -8,59 +8,35 @@ import TrackList from './trackList'
 
 const useStyles = makeStyles({
   playlistPaper: {
-    'flex': .80,
+    'flex': 1,
     'display': 'flex',
     'flex-direction': 'column',
     'justify-content': 'flex-start',
     'align-items': 'flex-start',
-    'width': '38%',
-    'marginLeft': '45em',
+    'width': '80%',
+    'height': '80%'
   },
 });
 
+// const playlists = ['a', 'b', 'c', 'd', 'e', 'f',' g'].map((e) => ({
+//   'title': e,
+//   'id': e
+// }));
 
-function Playlist() {
+function Playlist(props) {
   const classes = useStyles();
-  const [selectedPlaylist, setSelectedPlaylist] = useState({
-    title: '',
-    id: null
-  })
 
-  const handlePlaylistChange = (event, value) => {
-    if (value) {
-      setSelectedPlaylist({
-        title: value.title,
-        id: value.id
-      })
-    }
-  };
-
-  const { data, error } = useSWR('/api/playlists/', fetcher);
-  if (!data) {
+  const { data: playlists, error } = useSWR('/api/playlists/', fetcher);
+  
+  
+  if (!playlists) {
     return null;
-  }
-  const { playlists } = data
-
-  const [selectedTrackList, setSelectedTrackList] = useState([])
-
-  const handleTrackListChange = (newTrackList) => {
-    if (newTrackList) {
-      const newTrackListFiltered = []
-      newTrackList.map((item) => newTrackListFiltered.push({
-        id: item.track.id,
-        name: item.track.name,
-        audio_data: {
-          popularity: item.track.popularity
-        }
-      }));
-      setSelectedTrackList(newTrackListFiltered)
-    }
   }
 
   return (
-    <Paper className={classes.playlistPaper} elevation={3} style={{maxHeight: '100%', overflow: 'auto'}}>
-      <PlaylistSelector playlists={playlists} handlePlaylistChange={handlePlaylistChange}/>
-      {!!selectedPlaylist.id && <TrackList playlistId={selectedPlaylist.id} handleTrackListChange={handleTrackListChange}/>}
+    <Paper className={classes.playlistPaper} elevation={3} style={{maxHeight: '100%'}}>
+      <PlaylistSelector playlists={playlists} handlePlaylistChange={props.handlePlaylistChange}/>
+      {!!props.selectedPlaylist.id && <TrackList selectedTrackList={props.selectedTrackList}/>}
     </Paper>
   )
 }
