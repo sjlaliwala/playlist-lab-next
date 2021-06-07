@@ -1,15 +1,16 @@
-import { getAudioFeatures } from '../../../lib/spotify';
+import { getAudioFeatures, getSingleAudioFeatures } from '../../../lib/spotify';
 
 export default async function handler(req, res) {
   const { ids } = req.query;
-  //console.log(ids.join(','));
   const response = await getAudioFeatures(ids.join(','));
-  console.log('RESPONSE')
-  console.log(response)
-  const { items } = await response.json();
-  console.log('ITEMS')
-  console.log(items);
+  // console.log(ids[0])
+  // const response = await getSingleAudioFeatures(ids[0]);
+  // console.log(response)
+  const { items } = await response;
+
   const audio_features = items
+
+  console.log(items);
 
   res.setHeader(
     'Cache-Control',
